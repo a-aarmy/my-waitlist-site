@@ -7,32 +7,35 @@ export default function Component() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    try {
-      const response = await fetch('https://api.sheety.co/cee29805c6f658ed57aad3def1/waitlist/sheet1', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError('');
+  try {
+    const response = await fetch('https://api.sheety.co/cee29805c6f658ed57aad3def1/waitlist/sheet1', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        sheet1: {
+          email: email, // Ensure this matches the column name in your Google Sheet
         },
-        body: JSON.stringify({
-          sheet1: {
-            email: email, // This needs to match the column in your Google Sheet
-          },
-        }),
-      });
+      }),
+    });
 
-      if (response.ok) {
-        setSubmitted(true);
-        setEmail('');
-      } else {
-        setError('An error occurred. Please try again.');
-      }
-    } catch (err) {
-      setError('An error occurred. Please try again.');
+    if (response.ok) {
+      setSubmitted(true);
+      setEmail('');
+    } else {
+      const errorData = await response.json();
+      console.log('Error data:', errorData); // Logs specific error details
+      setError(errorData.message || 'An error occurred. Please try again.');
     }
-  };
+  } catch (err) {
+    console.log('Caught error:', err); // Logs any error caught during fetch
+    setError(`An error occurred: ${err.message}`);
+  }
+};
 
   return (
     <div style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>

@@ -1,101 +1,75 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useState } from 'react';
+
+export default function Component() {
+  const [email, setEmail] = useState(''); // State for email input
+  const [submitted, setSubmitted] = useState(false); // State for successful submission
+  const [error, setError] = useState(''); // State for error messages
+
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent the form from refreshing the page
+    setError(''); // Clear previous error
+    try {
+      const response = await fetch('https://api.sheety.co/cee29805c6f658ed57aad3def191d7a6/waitlist/sheet1', {
+        method: 'POST', // POST request to add data
+        headers: {
+          'Content-Type': 'application/json', // Set the content type to JSON
+        },
+        body: JSON.stringify({
+          sheet1: { // This object needs to match your Google Sheet's column name
+            email: email, // Ensure that the key matches the column name in Google Sheets
+          },
+        }),
+      });
+
+      if (response.ok) {
+        setSubmitted(true); // Show success message
+        setEmail(''); // Clear the email input field
+      } else {
+        setError('An error occurred. Please try again.'); // Set an error message
+      }
+    } catch (err) {
+      setError('An error occurred. Please try again.'); // Catch and display any error that occurs
+    }
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+      {/* Animated background */}
+      <div style={{ position: 'absolute', inset: '0', zIndex: '-1', overflow: 'hidden' }}>
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0" y1="50%" x2="100%" y2="50%" stroke="rgba(0,0,0,0.1)" strokeWidth="2">
+            <animate attributeName="y1" values="0%;100%;0%" dur="20s" repeatCount="indefinite" />
+            <animate attributeName="y2" values="100%;0%;100%" dur="20s" repeatCount="indefinite" />
+          </line>
+          <line x1="50%" y1="0" x2="50%" y2="100%" stroke="rgba(0,0,0,0.1)" strokeWidth="2">
+            <animate attributeName="x1" values="0%;100%;0%" dur="20s" repeatCount="indefinite" />
+            <animate attributeName="x2" values="100%;0%;100%" dur="20s" repeatCount="indefinite" />
+          </line>
+        </svg>
+      </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+      {/* Content */}
+      <div style={{ zIndex: '10', textAlign: 'center' }}>
+        <h1 style={{ fontSize: '48px', marginBottom: '16px' }}>Are You Listening?</h1>
+        <h2 style={{ fontSize: '24px', marginBottom: '24px' }}>Coming Soon</h2>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)} // Update email state when input changes
+            required
+            style={{ padding: '8px', marginBottom: '16px', border: '1px solid black', borderRadius: '4px', width: '100%', maxWidth: '300px' }}
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <button type="submit" style={{ padding: '8px 16px', backgroundColor: 'black', color: 'white', border: 'none', borderRadius: '4px', width: '100%', maxWidth: '300px' }}>
+            Join the waitlist
+          </button>
+        </form>
+        {submitted && <p style={{ color: 'green', marginTop: '16px' }}>Thank you for joining our waitlist!</p>}
+        {error && <p style={{ color: 'red', marginTop: '16px' }}>{error}</p>}
+      </div>
     </div>
   );
 }

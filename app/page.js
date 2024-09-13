@@ -11,7 +11,7 @@ export default function Component() {
   e.preventDefault();
   setError('');
   try {
-    const response = await fetch('https://api.sheety.co/cee29805c6f658ed57aad3def1/waitlist/sheet1', {
+    const response = await fetch('https://api.sheety.co/cee29805c6f658ed57aad3def191d7a6/waitlist1/sheet1', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
